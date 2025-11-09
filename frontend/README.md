@@ -1,36 +1,212 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TrackIt Frontend
 
-## Getting Started
+## 🚀 Tech Stack
 
-First, run the development server:
+-   Next.js 13+ (App Router)
+-   TypeScript
+-   Tailwind CSS
+-   Shadcn UI Components
+-   React
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📂 Project Structure
+
+```
+frontend/
+├── app/                    # Next.js App Router Directory
+│   ├── components/         # App-specific components
+│   ├── dashboard/         # Dashboard module
+│   ├── inventory/         # Inventory management
+│   ├── login/            # Authentication pages
+│   ├── signup/           # User registration
+│   ├── forgotpassword/   # Password recovery
+│   ├── resetpassword/    # Password reset
+│   └── verifyemail/      # Email verification
+├── components/            # Shared UI components
+│   └── ui/               # Shadcn UI components
+└── lib/                  # Utility functions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚙️ Prerequisites
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+-   Node.js 16.8.0 or later
+-   pnpm (Package Manager)
+-   Git
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Installation
 
-## Learn More
+1. **Clone the repository**
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+git clone <repository-url>
+cd frontend
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Install dependencies**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm install
+```
 
-## Deploy on Vercel
+3. **Set up environment variables**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+cp .env.example .env.local
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Start development server**
+
+```bash
+pnpm dev
+```
+
+## 📱 Available Scripts
+
+```bash
+# Development
+pnpm dev          # Start development server
+
+# Production
+pnpm build        # Build production bundle
+pnpm start        # Start production server
+
+# Utilities
+pnpm lint         # Run ESLint
+pnpm format       # Format code with Prettier
+```
+
+## 🔐 Authentication Pages
+
+-   `/login` - User login
+-   `/signup` - New user registration
+-   `/forgotpassword` - Password recovery
+-   `/resetpassword` - Password reset
+-   `/verifyemail` - Email verification
+
+## 📊 Main Features
+
+-   **Dashboard**
+
+    -   Analytics overview
+    -   Data visualization with charts
+    -   Real-time updates
+
+-   **Inventory Management**
+
+    -   Product tracking
+    -   Stock management
+    -   Inventory analytics
+
+-   **Theme Support**
+    -   Dark/Light mode toggle
+    -   Responsive design
+    -   Custom UI components
+
+## 🎨 UI Components
+
+All UI components are built using Shadcn UI:
+
+-   Alert Dialog
+-   Badge
+-   Button
+-   Card
+-   Chart
+-   Dialog
+-   Dropdown Menu
+-   Input
+-   Label
+-   Select
+-   Table
+-   Tabs
+
+## 🔧 Configuration Files
+
+-   `next.config.ts` - Next.js configuration
+-   `tsconfig.json` - TypeScript configuration
+-   `postcss.config.mjs` - PostCSS configuration
+-   `components.json` - Shadcn UI configuration
+-   `eslint.config.mjs` - ESLint configuration
+
+## 📚 Development Guidelines
+
+### Component Structure
+
+```tsx
+// Example component structure
+import { FC } from 'react'
+
+interface ComponentProps {
+  // Props definition
+}
+
+const Component: FC<ComponentProps> = () => {
+  return (
+    // JSX
+  )
+}
+
+export default Component
+```
+
+### Styling
+
+-   Use Tailwind CSS for styling
+-   Follow BEM naming convention for custom CSS
+-   Maintain dark/light theme compatibility
+
+## 🔄 State Management
+
+-   React Context for theme/auth state
+-   React Query for server state
+-   Local state for component-level state
+
+## 📱 Responsive Design
+
+-   Mobile-first approach
+-   Breakpoints:
+    -   sm: 640px
+    -   md: 768px
+    -   lg: 1024px
+    -   xl: 1280px
+
+## 🧪 Testing
+
+```bash
+# Run tests
+pnpm test
+
+# Run tests with coverage
+pnpm test:coverage
+```
+
+## 📦 Production Build
+
+```bash
+# Create production build
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+## 🐛 Common Issues
+
+1. **Build Errors**
+
+    - Clear `.next` folder
+    - Delete `node_modules` and reinstall
+
+2. **Type Errors**
+    - Update TypeScript definitions
+    - Check `tsconfig.json` settings
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Open pull request
+
+## 📜 License
+
+MIT License
