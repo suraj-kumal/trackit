@@ -85,7 +85,7 @@ export default function Home() {
           validateStatus: function (status) {
             return status >= 200 && status < 500; // Accept 2xx, 3xx, and 4xx
           },
-        }
+        },
       );
 
       // console.log("Response status:", response.status);
@@ -376,6 +376,16 @@ export default function Home() {
               >
                 Forgot password?
               </Link>
+            </motion.div>
+            <motion.div
+              variants={itemVariants}
+              className="flex justify-center items-center"
+            >
+              <div>
+                <h4 className="underline">demo credentials</h4>
+                <p> email : test@trackit.com</p>
+                <p> password : test@123</p>
+              </div>
             </motion.div>
           </motion.form>
         </div>
