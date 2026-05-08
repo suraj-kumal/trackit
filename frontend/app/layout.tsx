@@ -1,34 +1,43 @@
 import { ThemeProvider } from "@/app/components/theme-provider";
 import "@/app/globals.css";
-import { Inter } from "next/font/google";
+import { Inter, Architects_Daughter } from "next/font/google";
 
 const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "700"],
+    subsets: ["latin"],
+    weight: ["400", "700"],
+});
+
+const architectsDaughter = Architects_Daughter({
+    weight: "400",
+    subsets: ["latin"],
 });
 
 type RootLayoutProps = {
-  children: React.ReactNode;
+    children: React.ReactNode;
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  return (
-    <>
-      <html lang="en" suppressHydrationWarning className={inter.className}>
-        <head>
-          <title>TrackIt</title>
-        </head>
-        <body>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </body>
-      </html>
-    </>
-  );
+    return (
+        <>
+            <html
+                lang="en"
+                suppressHydrationWarning
+                className={`${architectsDaughter.className} antialiased`}
+            >
+                <head>
+                    <title>TrackIt</title>
+                </head>
+                <body>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        {children}
+                    </ThemeProvider>
+                </body>
+            </html>
+        </>
+    );
 }
