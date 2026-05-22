@@ -41,8 +41,14 @@ class User extends Authenticatable implements MustVerifyEmail
             "password" => "hashed",
         ];
     }
+
     public function sendEmailVerificationNotification()
     {
         $this->notify(new QueuedVerifyEmail());
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }
