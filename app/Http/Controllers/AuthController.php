@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\RegisterRequest;
 
@@ -23,15 +22,17 @@ class AuthController extends Controller
             $user = User::create([
                 "name" => $request->name,
                 "email" => $request->email,
-                "password" => Hash::make($request->password),
+                // "password" => Hash::make($request->password),
+                // do not need hash since its already casted in models
+                "password" => $request->password,
             ]);
 
             try {
                 $user->sendEmailVerificationNotification();
             } catch (\Exception $mailException) {
                 Log::error(
-                    "Email verification failed: " .
-                        $mailException->getMessage(),
+                    "Email verification failed: "
+                        . $mailException->getMessage(),
                 );
             }
 
@@ -61,14 +62,9 @@ class AuthController extends Controller
     /**
      * Login user
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         try {
-            $request->validate([
-                "email" => "required|email",
-                "password" => "required",
-            ]);
-
             $user = User::where("email", $request->email)->first();
 
             if (!$user) {

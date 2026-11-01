@@ -14,9 +14,10 @@ class Transaction extends Model
         "total_sell",
         "cost_price",
         "selling_price",
-        "transaction_date"
+        "transaction_date",
     ];
-    public function item(){
+    public function item()
+    {
         return $this->belongsTo(Item::class);
     }
 }
