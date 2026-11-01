@@ -29,7 +29,7 @@ class EmailVerificationController extends Controller
             return response()->json(['error' => 'Could not send verification email'], 500);
         }
     }
-    public function verify(Request $request, $id, $hash)
+    public function verify($id, $hash)
     {
         try {
             $user = User::find($id);
