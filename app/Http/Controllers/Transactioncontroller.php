@@ -237,7 +237,6 @@ class Transactioncontroller extends Controller
                 "success" => true,
                 "transaction" => $transaction,
             ]), 201);
-
         } catch (Exception $e) {
             return response()->make(json_encode([
                 "success" => false,
