@@ -20,7 +20,7 @@ class ItemController extends Controller
     }
 
 
-    public function get(Request $request, $id)
+    public function get(Request $request, int $id)
     {
         $userId = $request->user()->id;
         try {
@@ -68,7 +68,7 @@ class ItemController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $userId = $request->user()->id;
 
@@ -95,7 +95,7 @@ class ItemController extends Controller
             ]));
         }
     }
-    public function del(Request $request, $id)
+    public function del(Request $request, int $id)
     {
         $userId = $request->user()->id;
         try {

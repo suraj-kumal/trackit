@@ -23,34 +23,44 @@ class EmailVerificationController extends Controller
 
             $request->user()->sendEmailVerificationNotification();
 
-            return response()->json(['success' => true,'message' => 'Email verification link has been sent to your inbox!']);
+            return response()->json(['success' => true,
+                'message' => 'Email verification link has been sent to your inbox!'], 200);
         } catch (\Exception $e) {
             Log::error('Verification email resend error: ' . $e->getMessage());
             return response()->json(['error' => 'Could not send verification email'], 500);
         }
     }
-    public function verify($id, $hash)
+    public function verify(int $id, string $hash)
     {
         try {
             $user = User::find($id);
 
             if (!$user) {
                 return response(
-                    $this->htmlResponse("User Not Found", "This tab will close in <span id='countdown'>10</span> seconds."),
+                    $this->htmlResponse(
+                        "User Not Found",
+                        "This tab will close in <span id='countdown'>10</span> seconds."
+                    ),
                     404
                 );
             }
 
             if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
                 return response(
-                    $this->htmlResponse("Invalid Verification Link", "This tab will close in <span id='countdown'>10</span> seconds."),
+                    $this->htmlResponse(
+                        "Invalid Verification Link",
+                        "This tab will close in <span id='countdown'>10</span> seconds."
+                    ),
                     403
                 );
             }
 
             if ($user->hasVerifiedEmail()) {
                 return response(
-                    $this->htmlResponse("Email Already Verified", "This tab will close in <span id='countdown'>10</span> seconds."),
+                    $this->htmlResponse(
+                        "Email Already Verified",
+                        "This tab will close in <span id='countdown'>10</span> seconds."
+                    ),
                     200
                 );
             }
@@ -60,21 +70,24 @@ class EmailVerificationController extends Controller
             event(new Verified($user));
 
             return response(
-                $this->htmlResponse("Email Verified", "Thank you! Your email has been verified. This tab will close in <span id='countdown'>10</span> seconds."),
+                $this->htmlResponse("Email Verified", "Thank you! Your email has been verified.
+                     This tab will close in <span id='countdown'>10</span> seconds."),
                 200
             );
-
         } catch (\Exception $e) {
             Log::error('Email verification error: ' . $e->getMessage());
             return response(
-                $this->htmlResponse("Verification Failed", "An error occurred. This tab will close in <span id='countdown'>10</span> seconds."),
+                $this->htmlResponse("Verification Failed", "An error occurred.
+                    This tab will close in <span id='countdown'>10</span> seconds."),
                 500
             );
         }
     }
 
-    private function htmlResponse($title, $message)
+    private function htmlResponse(string $title, string $message)
     {
+        $title = e($title);
+        $message = e($message);
         return <<<HTML
             <!DOCTYPE html>
             <html lang="en">
@@ -118,5 +131,4 @@ class EmailVerificationController extends Controller
             </html>
             HTML;
     }
-
 }
