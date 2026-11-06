@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class ResetPasswordController extends Controller
 {
@@ -36,23 +38,35 @@ class ResetPasswordController extends Controller
             'password' => 'required|confirmed|min:8',
         ]);
 
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password),
-                ])->save();
-            }
-        );
+        try {
+            $status = Password::reset(
+                $request->only('email', 'password', 'password_confirmation', 'token'),
+                function ($user, $password) {
+                    $user->forceFill([
+                        'password' => Hash::make($password),
+                    ])->save();
+                }
+            );
 
-        if ($status == Password::PASSWORD_RESET) {
-            return response()->make(json_encode([
-                "message" => "password reset successful",
-            ]));
-        } else {
-            return response()->make(json_encode([
-                "message" => "invalid or expired token",
-            ]));
+            if ($status == Password::PASSWORD_RESET) {
+                return response()->json([
+                    "message" => "password reset successful",
+                ], 200);
+            } else {
+                return response()->json([
+                    "message" => "invalid or expired token",
+                ], 422);
+            }
+        } catch (Exception $e) {
+            Log::error('Password reset failed', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+                'exception' => get_class($e),
+            ]);
+
+            return response()->json([
+                "message" => "something went wrong !",
+            ], 500);
         }
     }
 }
