@@ -123,7 +123,7 @@ class ResetPasswordTest extends TestCase
             'password_confirmation' => 'NewPassword123',
         ]);
 
-        $response->assertStatus(200)
+        $response->assertStatus(422)
             ->assertJson([
                 'message' => 'invalid or expired token',
             ]);
@@ -142,7 +142,7 @@ class ResetPasswordTest extends TestCase
             'password_confirmation' => 'NewPassword123',
         ]);
 
-        $response->assertStatus(200)
+        $response->assertStatus(422)
             ->assertJson([
                 'message' => 'invalid or expired token',
             ]);
