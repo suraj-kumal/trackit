@@ -17,6 +17,20 @@ php artisan route:cache
     done
 ) &
 
+# Temporary benchmark, only runs when BENCH=1 is set in Render
+if [ "$BENCH" = "1" ]; then
+    (
+        sleep 20
+        echo "=== PROCESSES ==="
+        ps aux | grep -i '[s]woole\|[o]ctane'
+        echo "=== BENCH c=1 ==="
+        ab -k -n 500 -c 1 "http://127.0.0.1:${PORT:-10000}/api/ping" 2>&1
+        echo "=== BENCH c=50 ==="
+        ab -k -n 5000 -c 50 "http://127.0.0.1:${PORT:-10000}/api/ping" 2>&1
+        echo "=== BENCH DONE ==="
+    ) &
+fi
+
 exec php artisan octane:start \
     --server=swoole \
     --host=0.0.0.0 \

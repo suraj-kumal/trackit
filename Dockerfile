@@ -7,7 +7,7 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 RUN chmod +x /usr/local/bin/install-php-extensions \
     && install-php-extensions swoole pdo_pgsql pgsql pcntl bcmath
 
-RUN apt-get update && apt-get install -y --no-install-recommends git unzip \
+RUN apt-get update && apt-get install -y --no-install-recommends git unzip procps apache2-utils \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
