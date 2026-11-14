@@ -47,3 +47,6 @@ Route::get("/api-health", function () {
         "foo" => "bar",
     ]);
 });
+
+
+Route::get('/ping', fn() => response('ok'))->withoutMiddleware('*');
