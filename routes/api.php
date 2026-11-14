@@ -40,3 +40,10 @@ Route::middleware("auth:sanctum")->group(function () {
     Route::post("/transaction", [Transactioncontroller::class,"add"]);
     Route::put("/transaction/{id}", [Transactioncontroller::class,"update"]);
 });
+
+
+Route::get("/api-health", function () {
+    return response()->json([
+        "foo" => "bar",
+    ]);
+});
