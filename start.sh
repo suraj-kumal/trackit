@@ -23,4 +23,4 @@ exec php artisan octane:start \
     --port="${PORT:-10000}" \
     --workers="${OCTANE_WORKERS:-2}" \
     --task-workers=1 \
-    --max-requests=500
+    --max-requests=100000
