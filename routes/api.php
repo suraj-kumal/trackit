@@ -50,3 +50,19 @@ Route::get("/api-health", function () {
 
 
 Route::get('/ping', fn() => response('ok'))->withoutMiddleware('*');
+
+
+Route::get('/diag', function () {
+    return response()->json([
+        'debug'        => config('app.debug'),
+        'env'          => app()->environment(),
+        'config_cached'=> app()->configurationIsCached(),
+        'routes_cached'=> app()->routesAreCached(),
+        'log_channel'  => config('logging.default'),
+        'log_level'    => config('logging.channels.'.config('logging.default').'.level'),
+        'cache_store'  => config('cache.default'),
+        'session'      => config('session.driver'),
+        'octane'       => app()->bound(\Laravel\Octane\Contracts\Client::class) ? 'yes' : 'no',
+        'workers'      => env('OCTANE_WORKERS', 'not-set'),
+    ]);
+});
