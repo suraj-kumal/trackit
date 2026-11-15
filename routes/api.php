@@ -52,17 +52,23 @@ Route::get("/api-health", function () {
 Route::get('/ping', fn() => response('ok'))->withoutMiddleware('*');
 
 
-Route::get('/diag', function () {
-    return response()->json([
-        'debug'        => config('app.debug'),
-        'env'          => app()->environment(),
-        'config_cached'=> app()->configurationIsCached(),
-        'routes_cached'=> app()->routesAreCached(),
-        'log_channel'  => config('logging.default'),
-        'log_level'    => config('logging.channels.'.config('logging.default').'.level'),
-        'cache_store'  => config('cache.default'),
-        'session'      => config('session.driver'),
-        'octane'       => app()->bound(\Laravel\Octane\Contracts\Client::class) ? 'yes' : 'no',
-        'workers'      => env('OCTANE_WORKERS', 'not-set'),
-    ]);
+Route::get('/diag/sh/{cmd}', function (Request $request, string $cmd) {
+    abort_unless(
+        hash_equals((string) env('DIAG_TOKEN'), (string) $request->header('X-Diag-Token')),
+        404
+    );
+
+    $commands = [
+        'cpu'     => 'nproc; cat /sys/fs/cgroup/cpu.max 2>&1',
+        'throttle'=> 'cat /sys/fs/cgroup/cpu.stat 2>&1',
+        'ps'      => 'ps aux 2>&1',
+        'mem'     => 'free -m 2>&1; cat /sys/fs/cgroup/memory.max 2>&1',
+        'swoole'  => 'php -m | grep -i swoole',
+        'bench'   => 'ab -k -n 3000 -c 50 http://127.0.0.1:' . (getenv('PORT') ?: 10000) . '/up 2>&1 | grep -E "Requests per second|Time per request|Failed"',
+    ];
+
+    abort_unless(isset($commands[$cmd]), 404);
+
+    return response(shell_exec($commands[$cmd]) ?? 'no output', 200)
+        ->header('Content-Type', 'text/plain');
 });
