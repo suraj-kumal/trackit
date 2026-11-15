@@ -21,5 +21,4 @@ exec php artisan octane:start \
     --server=swoole \
     --host=0.0.0.0 \
     --port="${PORT:-10000}" \
-    --workers="${OCTANE_WORKERS:-4}" \
     --max-requests=100000
