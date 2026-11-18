@@ -3,6 +3,7 @@ set -e
 
 php artisan package:discover --ansi
 php artisan migrate --force
+php artisan db:seed --class=UserSeeder --force
 php artisan config:cache
 php artisan route:cache
 
