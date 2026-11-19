@@ -1,230 +1,113 @@
-# TrackIt Backend API Documentation
+# WhereStock
 
-## 🚀 Tech Stack
+It is a REST API for tracking inventory and sales. It lets users manage
+items and their buy/sell records, then calculates stock, revenue, profit, and
+weekly and monthly performance metrics.
 
--   Laravel 10.x
--   PHP 8.2+
--   MySQL/PostgreSQL
--   Laravel Sanctum for API Authentication
--   Laravel Queue for Background Jobs
+## https://where-stock.onrender.com
 
-## 📋 Prerequisites
+## Features
 
--   PHP >= 8.2
--   Composer
--   MySQL/PostgreSQL
--   Redis (optional, for queue)
+- Token-based API authentication with Laravel Sanctum
+- User-owned item and transaction records
+- Inventory and sales analytics, including stock value, sell-through, and
+  estimated days of stock remaining
+- Email verification and password reset flows
 
-## ⚙️ Installation Steps
+## Getting started
 
-1. **Clone Repository**
+### Requirements
+
+- PHP 8.2 or later
+- Composer
+- A database supported by Laravel; the example environment is configured for
+  SQLite
+- Node.js and npm if you want to build the included Vite assets
+
+### Install and run locally
 
 ```bash
-git clone https://github.com/yourusername/trackit.git
+git clone https://github.com/suraj-kumal/trackit.git
 cd trackit
-```
-
-2. **Install Dependencies**
-
-```bash
 composer install
-```
-
-3. **Environment Setup**
-
-```bash
 cp .env.example .env
 php artisan key:generate
-```
-
-4. **Configure Database**
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=trackit
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-5. **Run Migrations & Seeders**
-
-```bash
-php artisan migrate --seed
-```
-
-## 🗄️ Project Structure
-
-```
-├── app
-│   ├── Http
-│   │   ├── Controllers
-│   │   ├── Middleware
-│   │   └── Requests
-│   ├── Models
-│   ├── Services
-│   └── Traits
-├── config
-├── database
-│   ├── factories
-│   ├── migrations
-│   └── seeders
-├── routes
-│   ├── api.php
-│   └── web.php
-└── tests
-```
-
-## 🔑 API Authentication
-
-We use Laravel Sanctum for API authentication.
-
-```php
-// Example Authentication Request
-POST /api/login
-{
-    "email": "user@example.com",
-    "password": "password"
-}
-
-// Response
-{
-    "token": "1|2345678..."
-}
-```
-
-## 📚 API Endpoints
-
-### Authentication
-
-```
-POST   /api/login           - Login user
-POST   /api/register        - Register new user
-POST   /api/logout         - Logout user
-GET    /api/user           - Get authenticated user
-```
-
-### Tasks
-
-```
-GET    /api/tasks          - List all tasks
-POST   /api/tasks          - Create new task
-GET    /api/tasks/{id}     - Get single task
-PUT    /api/tasks/{id}     - Update task
-DELETE /api/tasks/{id}     - Delete task
-```
-
-## 🛠️ Development Commands
-
-```bash
-# Start development server
+php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
+php artisan migrate
 php artisan serve
-
-# Run tests
-php artisan test
-
-# Create migration
-php artisan make:migration create_table_name
-
-# Create controller
-php artisan make:controller ControllerName --api
-
-# Create model
-php artisan make:model ModelName -mf
 ```
 
-## 🧪 Testing
+The API is available at `http://127.0.0.1:8000/api`. The example environment
+uses SQLite. If you choose another supported database, configure its connection
+in `.env` before running migrations.
+
+To process queued work such as email notifications, run a worker in another
+terminal:
 
 ```bash
-# Run all tests
-php artisan test
-
-# Run specific test file
-php artisan test --filter UserTest
-
-# Run tests with coverage
-php artisan test --coverage
+php artisan queue:work
 ```
 
-## 🔄 Database Seeding
+To build the included frontend assets:
 
 ```bash
-# Run all seeders
-php artisan db:seed
-
-# Run specific seeder
-php artisan db:seed --class=UserSeeder
+npm install
+npm run build
 ```
 
-## 📝 Coding Standards
+### Make an API request
 
-We follow PSR-12 coding standards. Run PHP CS Fixer:
+Register to receive an API token:
 
 ```bash
-./vendor/bin/php-cs-fixer fix
+curl -X POST http://127.0.0.1:8000/api/register \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Alex","email":"alex@example.com","password":"ChangeMe123!","password_confirmation":"ChangeMe123!"}'
 ```
 
-## 🚀 Deployment
-
-1. **Update Dependencies**
+Use the returned token as a bearer token on protected routes. For example, add
+an item and then record a transaction for its ID:
 
 ```bash
-composer install --optimize-autoloader --no-dev
+curl -X POST http://127.0.0.1:8000/api/item \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Notebook"}'
+
+curl -X POST http://127.0.0.1:8000/api/transaction \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"item_id":1,"total_buy":20,"total_sell":5,"cost_price":2.50,"selling_price":4.00,"transaction_date":"2026-01-15"}'
+
+curl http://127.0.0.1:8000/api/transaction \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Accept: application/json"
 ```
 
-2. **Environment Setup**
+Replace `item_id` with the ID returned when you create the item. The transaction
+list response includes aggregate analytics for the authenticated user's items.
+
+## Development and tests
+
+Run the test suite with:
 
 ```bash
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+composer test
 ```
 
-3. **Database Migration**
+## Help
 
-```bash
-php artisan migrate --force
-```
+For bugs, questions, or feature requests, open an
+[issue in the GitHub repository](https://github.com/suraj-kumal/trackit/issues).
+The API routes and validation rules in [routes/api.php](routes/api.php) and
+[app/Http/Requests/](app/Http/Requests/) are the current reference for request
+details.
 
-## ⚡ Performance Optimization
+## Maintainers and contributing
 
-```bash
-# Clear all caches
-php artisan optimize:clear
-
-# Optimize for production
-php artisan optimize
-```
-
-## 🐛 Common Issues & Solutions
-
-1. **Storage Link Issues**
-
-```bash
-php artisan storage:link
-```
-
-2. **Permission Issues**
-
-```bash
-chmod -R 775 storage bootstrap/cache
-```
-
-3. **Composer Dependencies**
-
-```bash
-composer dump-autoload
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/name`)
-3. Commit changes (`git commit -am 'Add feature'`)
-4. Push branch (`git push origin feature/name`)
-5. Create Pull Request
-
-## 📜 License
-
-This project is licensed under the MIT License.
+WhereStock is maintained by [suraj-kumal](https://github.com/suraj-kumal).
+Contributions are welcome: open an issue to discuss a change, then submit a pull
+request with a clear description and tests for behavior you add or change.
