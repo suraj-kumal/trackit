@@ -50,4 +50,4 @@ Route::get("/api-health", function () {
 
 Route::get('/ping', fn() => response('ok'))->withoutMiddleware('*');
 
-Route::post('/alive', [AliveController::class, 'store']);
+Route::get('/alive', [AliveController::class, 'store']);
