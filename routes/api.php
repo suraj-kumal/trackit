@@ -6,6 +6,7 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Transactioncontroller;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\AliveController;
 
 // Authentication Routes
 Route::post('register', [AuthController::class, 'register']);
@@ -48,3 +49,5 @@ Route::get("/api-health", function () {
 
 
 Route::get('/ping', fn() => response('ok'))->withoutMiddleware('*');
+
+Route::post('/alive', [AliveController::class, 'store']);
